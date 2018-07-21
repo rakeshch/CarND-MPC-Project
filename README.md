@@ -31,7 +31,7 @@ I started out with 20 steps at 0.05, tried with 8 steps at 0.1 and several other
 
 # Polynomial Fitting and MPC Preprocessing
 
-The waypoints provided are transformed into vehicle's perspective. This simplifies the process to fit a polynomial to the waypoints because the vehicle's x and y coordinates are now at the origin (0, 0) and the orientation angle is also zero.
+The waypoints provided are transformed into vehicle's perspective (main.cpp lines 125-126). This simplifies the process to fit a polynomial to the waypoints because the vehicle's x and y coordinates are now at the origin (0, 0) and the orientation angle is also zero.
 
 # Model Predictive Control with Latency
 
