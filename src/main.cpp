@@ -93,12 +93,9 @@ int main() {
 					double psi = j[1]["psi"];
 					double v = j[1]["speed"];
 
-					/*
-					* Calculate steering angle and throttle using MPC.
-					*
-					* Both are in between [-1, 1].
-					*
-					*/
+					//initial steering angle and throttle
+					double steer_value = j[1]["steering_angle"];
+					double throttle_value = j[1]["throttle"];
 
 					// transfer world space waypoints into vehicle space (vehicle at origin)
 					vector<double> waypoints_x;
@@ -119,17 +116,19 @@ int main() {
 					// fit polynomial to waypoints
 					Eigen::VectorXd wpts_coeff = polyfit(waypoints_x_eig, waypoints_y_eig, 3);
 
-					// calculate error
+					// calculate cte and orientation error
 					double cte = polyeval(wpts_coeff, 0); // py=0, px=0;
-
-					// most of poly function is zero due to px=0
 					double epsi = -atan(wpts_coeff(1));
-
-					double steer_value = j[1]["steering_angle"];
-					double throttle_value = j[1]["throttle"];
 
 					Eigen::VectorXd state_vec(6);
 					state_vec << 0, 0, 0, v, cte, epsi;
+
+					/*
+					* Calculate steering angle and throttle using MPC.
+					*
+					* Both are in between [-1, 1].
+					*
+					*/
 
 					// compute the optimal trajectory
 					vector<double> mpc_out = mpc.Solve(state_vec, wpts_coeff);
@@ -145,6 +144,9 @@ int main() {
 					//Display MPC predicted trajectory 
 					vector<double> mpc_x_vals;
 					vector<double> mpc_y_vals;
+
+					mpc_x_vals.push_back(0);
+					mpc_y_vals.push_back(0);
 
 					// add (x,y) points to list here, points are in reference to the vehicle's coordinate system
 					// the points in the simulator are connected by a Green line
@@ -167,8 +169,7 @@ int main() {
 
 					//.. add (x,y) points to list here, points are in reference to the vehicle's coordinate system
 					// the points in the simulator are connected by a Yellow line
-
-					for (double i = 0; i < 100; i += 3) {
+					for (double i = 1; i < 100; i+=3) {
 						next_x_vals.push_back(i);
 						next_y_vals.push_back(polyeval(wpts_coeff, i));
 					}
