@@ -39,7 +39,7 @@ The latency is handled in two steps in this project. The actual equations depend
 
 # Final result
 
-Final result of the MPC implementation can be seen [here](./videos/mpc_output.mp4)
+Final result of the MPC implementation can be seen [here](https://youtu.be/uF1hT6e9Gi4)
 
 ---
 
