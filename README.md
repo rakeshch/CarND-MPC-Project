@@ -1,11 +1,11 @@
 # Model Predictive Controller Project
 Self-Driving Car Engineer Nanodegree Program
 
-## Introduction
+# Introduction
 
 The goal of this project is to implement Model Predictive Control to drive the car around the track in Udacity-provided simulator, which communicates telemetry and track waypoint data via websocket, by sending steering and acceleration commands back to the simulator. The solution must be robust to 100ms latency, as one may encounter in real-world application. This solution makes use of [Ipopt](https://projects.coin-or.org/Ipopt/) and [CppAD](https://www.coin-or.org/CppAD/) libraries to calculate an optimal trajectory and its associated actuation commands in order to minimize error with a third-degree polynomial fit to the given waypoints. The optimization considers only a short duration's worth of waypoints, and produces a trajectory for that duration based upon a model of the vehicle's kinematics and a cost function based mostly on the vehicle's cross-track error (roughly the distance from the track waypoints) and orientation angle error, with other cost factors included to improve performance.
 
-## Implementation steps
+# Implementation steps
 
 Following are the steps in this implementation to follow the trajectory along a line:
 
@@ -15,7 +15,7 @@ Following are the steps in this implementation to follow the trajectory along a 
 4. Define the components of the cost function (state, actuators, etc). 
 5. Define the model constraints. These are the state update equations as shown below.
 
-# The Model
+## The Model
 
 The model includes vehicle's x and y coordinates, orientation angle (psi), velocity, cross-track error and psi error (epsi). Actuator outputs are acceleration and delta (steering angle). The model combines the state and actuations from the previous timestep to calculate the state for the current timestep based on the equations below:
 
@@ -23,21 +23,21 @@ The model includes vehicle's x and y coordinates, orientation angle (psi), veloc
 
 Where dt is the timestep between predictions and Lf is the distance between the front and the center of gravity of the vehicle, which determines its turning radius.
 
-# Timestep Length and Elapsed Duration (N & dt)
+## Timestep Length and Elapsed Duration (N & dt)
 
 The final values chosen are 10 and 0.1 for N and dt respectively.
 
 I started out with 20 steps at 0.05, tried with 8 steps at 0.1 and several other combinations and all of them resulted in an erratic behavior before settling down with 10 steps at 0.1, which means that the optimizer is considering a one second duration in which to determine a corrective trajectory. 
 
-# Polynomial Fitting and MPC Preprocessing
+## Polynomial Fitting and MPC Preprocessing
 
 The waypoints provided are transformed into vehicle's perspective (main.cpp lines 125-126). This simplifies the process to fit a polynomial to the waypoints because the vehicle's x and y coordinates are now at the origin (0, 0) and the orientation angle is also zero.
 
-# Model Predictive Control with Latency
+## Model Predictive Control with Latency
 
-The latency is handled in two steps in this project. The actual equations depend upon the actuations from the previous timestep, but with a delay of 100ms, The actuations are applied another timestep later, so the equations have been altered to account for this (in MPC.cpp lines 119-122). Also, in addition to the cost functions suggested in the lessons an additional cost penalizing the combination of velocity and delta (MPC.cpp line 70) was included and this resulted in much more controlled cornering. This part of adding an additional cost is based on a suggestion by another udacity sdcnd student.
+The latency is handled in two steps in this project. The actual equations depend upon the actuations from the previous timestep, but with a delay of 100ms, The actuations are applied another timestep later, so the equations have been altered to account for this (in MPC.cpp lines 119-122). Also, in addition to the cost functions suggested in the lessons an additional cost penalizing the combination of velocity and delta (MPC.cpp line 70) was included and this resulted in much more controlled cornering. This part of adding an additional cost is based on the suggestions from udacity slack community.
 
-# Final result
+## Final result
 
 Final result of the MPC implementation can be seen [here](https://youtu.be/uF1hT6e9Gi4)
 
