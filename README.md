@@ -1,5 +1,23 @@
-# CarND-Controls-MPC
+# Model Predictive Controller Project
 Self-Driving Car Engineer Nanodegree Program
+
+## Introduction
+
+The goal of this project is to implement Model Predictive Control to drive the car around the track in Udacity-provided simulator, which communicates telemetry and track waypoint data via websocket, by sending steering and acceleration commands back to the simulator. The solution must be robust to 100ms latency, as one may encounter in real-world application. This solution makes use of [Ipopt](https://projects.coin-or.org/Ipopt/) and [CppAD](https://www.coin-or.org/CppAD/) libraries to calculate an optimal trajectory and its associated actuation commands in order to minimize error with a third-degree polynomial fit to the given waypoints. The optimization considers only a short duration's worth of waypoints, and produces a trajectory for that duration based upon a model of the vehicle's kinematics and a cost function based mostly on the vehicle's cross-track error (roughly the distance from the track waypoints) and orientation angle error, with other cost factors included to improve performance.
+
+# Implementation steps
+
+Following are the steps in this implementation to follow the trajectory along a line:
+
+1. Set N and dt.
+2. Fit the polynomial to the waypoints.
+3. Calculate initial cross track error and orientation error values.
+4. Define the components of the cost function (state, actuators, etc). 
+5. Define the model constraints. These are the state update equations as shown below.
+
+# The Model
+
+The model includes vehicle's x and y coordinates, orientation angle (psi), velocity, cross-track error and psi error (epsi). Actuator outputs are acceleration and delta (steering angle). The model combines the state and actuations from the previous timestep to calculate the state for the current timestep based on the equations below:
 
 ---
 
